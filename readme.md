@@ -1,43 +1,37 @@
 # CUDA Security Static Analyzer
 
-Rough draft of a CUDA kernel security scanner. It walks `.cu` files, runs a few heuristics for sketchy reads/writes, spits out SARIF, and adds a tiny ML-based priority score so noisy findings bubble up.
+A CUDA kernel security scanner that analyzes `.cu` files for common vulnerabilities, outputs results in SARIF format, and uses ML-based scoring to prioritize findings.
 
-## Current features
-- basic rule registry + three rules (bounds, missing sync, shared memory races)
-- Typer CLI with Rich tables and SARIF export
-- feature extraction that counts divergence / coalescing hints
-- logistic regression stub (train-once synthetic data with heuristic fallback)
-- sample kernels + demo script so the repo looks alive
-- pytest smoke coverage for the analyzer/metrics plumbing
+## Features
+- Rule-based analysis with three core rules: bounds checking, synchronization issues, and shared memory races
+- Command-line interface with Rich formatting and SARIF export
+- Feature extraction for divergence and coalescing patterns
+- Logistic regression model for finding prioritization
+- Sample kernels and test coverage
 
-## checklist
-- [x] Rule engine scaffolded and hot-loaded from `cuda_static_analyzer/rules`
-- [x] Analyzer wiring with feature extraction, ML triage, SARIF builder
-- [x] CLI (`scan`, `rules`) and Rich output
-- [x] Sample kernels + `demo.sh` wiring for quick run
-- [x] Pytest smoke tests + dependency pins in `requirements.txt`
-- [ ] Real Clang/LLVM AST traversal instead of regex heuristics
-- [ ] Shared model artifact trained on real CUDA kernels
-- [ ] More rules (warp divergence, memory fence misuse, shared memory overflows)
-- [ ] GitHub Action + SARIF upload for CI
-- [ ] Docs showing how to build custom rules and plug in LibTooling
-
-## Running the static analyzer
+## Setup and Usage
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
 python main.py scan samples/kernels --sarif-out reports/sample.sarif
 ```
-`demo.sh` does the same thing automatically.
 
-## CLI guide
-- `python main.py scan <path>` – scan a file or directory full of `.cu` files.
-- `python main.py rules` – print whatever rules are currently registered.
+Alternatively, run `demo.sh` for a quick demonstration.
 
+## CLI Commands
+- `python main.py scan <path>` – Scan a file or directory containing `.cu` files
+- `python main.py rules` – List all registered rules
 
-## Notes
-- swap regex heuristics for libclang AST visitors
-- persist a trained classifier so CI runs don’t re-fit
-- add config knobs (severity filters, suppressions, ignore files)
-- Add GitHub SARIF upload + Action workflow for viewing in security tab
+## Checklist
+- [ ] Replace regex heuristics with Clang/LLVM AST traversal
+- [ ] Train model on real CUDA kernel dataset
+- [ ] Additional rules for warp divergence, memory fence misuse, and shared memory overflows
+- [ ] GitHub Action workflow with SARIF upload
+- [ ] Configuration options for severity filtering and suppressions
+- [ ] Documentation for custom rule development
+
+## Project Structure
+- `cuda_static_analyzer/rules` – Rule definitions loaded dynamically
+- `samples/kernels` – Example CUDA kernels for testing
+- `tests/` – pytest test suite
