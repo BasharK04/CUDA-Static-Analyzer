@@ -1,0 +1,75 @@
+{
+  "version": "2.1.0",
+  "$schema": "https://schemastore.azurewebsites.net/schemas/json/sarif-2.1.0.json",
+  "runs": [
+    {
+      "tool": {
+        "driver": {
+          "name": "CUDA Security Static Analyzer",
+          "informationUri": "https://github.com/your-org/cuda-static-analyzer",
+          "rules": [
+            {
+              "id": "CUDA001",
+              "defaultConfiguration": {"level": "high"},
+              "shortDescription": {"text": "Potential out-of-bounds access detected."}
+            },
+            {
+              "id": "CUDA002",
+              "defaultConfiguration": {"level": "medium"},
+              "shortDescription": {"text": "Shared memory declared without thread synchronization."}
+            },
+            {
+              "id": "CUDA003",
+              "defaultConfiguration": {"level": "medium"},
+              "shortDescription": {"text": "Shared memory array has multiple writers."}
+            }
+          ]
+        }
+      },
+      "results": [
+        {
+          "ruleId": "CUDA001",
+          "level": "high",
+          "message": {"text": "Potential out-of-bounds access detected. Index uses thread identifiers without nearby guard conditions."},
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {"uri": "samples/kernels/vulnerable.cu"},
+                "region": {"startLine": 7, "startColumn": 5}
+              }
+            }
+          ],
+          "properties": {"exploit_probability": 0.84}
+        },
+        {
+          "ruleId": "CUDA002",
+          "level": "medium",
+          "message": {"text": "Shared memory declared without thread synchronization barrier"},
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {"uri": "samples/kernels/vulnerable.cu"},
+                "region": {"startLine": 4, "startColumn": 1}
+              }
+            }
+          ],
+          "properties": {"exploit_probability": 0.63}
+        },
+        {
+          "ruleId": "CUDA003",
+          "level": "medium",
+          "message": {"text": "Shared memory array 'scratch' is written multiple times without synchronization; threads may race on shared state."},
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {"uri": "samples/kernels/vulnerable.cu"},
+                "region": {"startLine": 9, "startColumn": 1}
+              }
+            }
+          ],
+          "properties": {"exploit_probability": 0.59}
+        }
+      ]
+    }
+  ]
+}
