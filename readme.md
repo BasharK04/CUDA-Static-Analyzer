@@ -2,9 +2,9 @@
 
 A CUDA kernel security scanner that analyzes `.cu` files for common vulnerabilities, outputs results in SARIF format, and uses ML-based scoring to prioritize findings.
 
-## Features
-- Rule-based analysis with three core rules: bounds checking, synchronization issues, and shared memory races
-- Command-line interface with Rich formatting and SARIF export
+## Features (Not all implemented yet)
+- Rule-based analysis with three rules: bounds checking, synchronization issues, and shared memory races
+- Command-line interface with SARIF export
 - Feature extraction for divergence and coalescing patterns
 - Logistic regression model for finding prioritization
 - Sample kernels and test coverage
